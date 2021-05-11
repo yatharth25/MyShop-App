@@ -20,69 +20,78 @@ class ProductsOverviewScreen extends StatefulWidget {
 
 class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
   var _showOnlyFavorites = false;
-  var _isInit = true;
-  var _isLoading = false;
+  // var _isInit = true;
+  // var _isLoading = false;
 
-  @override
-  void didChangeDependencies() {
-    if (_isInit) {
-      setState(() {
-        _isLoading = true;
-      });
+  // @override
+  // void didChangeDependencies() {
+  //   if (_isInit) {
+  //     setState(() {
+  //       _isLoading = true;
+  //     });
 
-      Provider.of<Products>(context).fetchAndSetProducts().then((_) {
-        setState(() {
-          _isLoading = false;
-        });
-      });
-    }
-    _isInit = false;
-    super.didChangeDependencies();
-  }
+  //     Provider.of<Products>(context).fetchAndSetProducts().then((_) {
+  //       setState(() {
+  //         _isLoading = false;
+  //       });
+  //     });
+  //   }
+  //   _isInit = false;
+  //   super.didChangeDependencies();
+  // }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("MyShop"), actions: [
-        PopupMenuButton(
-            onSelected: (FiltersOptions selectedValue) {
-              setState(() {
-                if (selectedValue == FiltersOptions.Favorites) {
-                  _showOnlyFavorites = true;
-                } else {
-                  _showOnlyFavorites = false;
-                }
-              });
-            },
-            icon: Icon(Icons.more_vert),
-            itemBuilder: (_) => [
-                  PopupMenuItem(
-                    child: Text('Only Favorites'),
-                    value: FiltersOptions.Favorites,
-                  ),
-                  PopupMenuItem(
-                    child: Text('Show All'),
-                    value: FiltersOptions.All,
-                  ),
-                ]),
-        Consumer<Cart>(
-          builder: (_, cartData, ch) => Badge(
-            child: ch,
-            value: cartData.itemCount.toString(),
-          ),
-          child: IconButton(
-            icon: Icon(
-              Icons.shopping_cart,
+        appBar: AppBar(title: Text("MyShop"), actions: [
+          PopupMenuButton(
+              onSelected: (FiltersOptions selectedValue) {
+                setState(() {
+                  if (selectedValue == FiltersOptions.Favorites) {
+                    _showOnlyFavorites = true;
+                  } else {
+                    _showOnlyFavorites = false;
+                  }
+                });
+              },
+              icon: Icon(Icons.more_vert),
+              itemBuilder: (_) => [
+                    PopupMenuItem(
+                      child: Text('Only Favorites'),
+                      value: FiltersOptions.Favorites,
+                    ),
+                    PopupMenuItem(
+                      child: Text('Show All'),
+                      value: FiltersOptions.All,
+                    ),
+                  ]),
+          Consumer<Cart>(
+            builder: (_, cartData, ch) => Badge(
+              child: ch,
+              value: cartData.itemCount.toString(),
             ),
-            onPressed: () =>
-                {Navigator.of(context).pushNamed(CartScreen.routeName)},
-          ),
-        )
-      ]),
-      drawer: AppDrawer(),
-      body: _isLoading
-          ? Center(child: CircularProgressIndicator())
-          : ProductsGrid(_showOnlyFavorites),
-    );
+            child: IconButton(
+              icon: Icon(
+                Icons.shopping_cart,
+              ),
+              onPressed: () =>
+                  {Navigator.of(context).pushNamed(CartScreen.routeName)},
+            ),
+          )
+        ]),
+        drawer: AppDrawer(),
+        body: FutureBuilder(
+            future: Provider.of<Products>(context, listen: false).fetchAndSetProducts(),
+            builder: (ctx, snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                return Consumer<Products>(
+                    builder: (ctx, _, child) =>
+                        ProductsGrid(_showOnlyFavorites));
+              } else if (snapshot.error != null) {
+                return Center(child: Text("Sorry! An error occured :("));
+              } else {
+                return Center(child: CircularProgressIndicator());
+              }
+            }));
   }
 }
