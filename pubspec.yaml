@@ -26,6 +26,8 @@ dependencies:
   provider: ^5.0.0
   intl: ^0.17.0
   http: ^0.13.3
+  font_awesome_flutter: ^9.0.0
+  google_fonts: ^2.0.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -70,5 +72,8 @@ flutter:
     - family: Anton
       fonts:
         - asset: assets/fonts/Anton-Regular.ttf
+  assets:
+    - assets/images/login_bg.png
+    - assets/images/register_bg.png
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
