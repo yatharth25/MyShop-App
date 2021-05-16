@@ -7,6 +7,8 @@ import '../models/http_exceptions.dart';
 
 class Products with ChangeNotifier {
   List<Product> _items = [];
+  final String authToken;
+  Products(this.authToken, this._items);
 
   List<Product> get items {
     return [..._items];
@@ -21,12 +23,12 @@ class Products with ChangeNotifier {
   }
 
   Future<void> fetchAndSetProducts() async {
-    const url =
-        'https://myshop-fef51-default-rtdb.firebaseio.com/products.json';
+    final url =
+        'https://myshop-fef51-default-rtdb.firebaseio.com/products.json?auth=$authToken';
     try {
       final response = await http.get(Uri.parse(url));
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
-      if(extractedData==null){
+      if (extractedData == null) {
         return;
       }
       final List<Product> loadedProducts = [];
@@ -48,8 +50,8 @@ class Products with ChangeNotifier {
   }
 
   Future<void> addProduct(Product product) async {
-    const url =
-        'https://myshop-fef51-default-rtdb.firebaseio.com/products.json';
+    final url =
+        'https://myshop-fef51-default-rtdb.firebaseio.com/products.json?auth=$authToken';
     try {
       final response = await http.post(
         Uri.parse(url),
@@ -80,7 +82,7 @@ class Products with ChangeNotifier {
     final prodIndex = _items.indexWhere((prodId) => prodId.id == id);
     if (prodIndex >= 0) {
       final url =
-          'https://myshop-fef51-default-rtdb.firebaseio.com/products/$id.json';
+          'https://myshop-fef51-default-rtdb.firebaseio.com/products/$id.json?auth=$authToken';
       await http.patch(Uri.parse(url),
           body: json.encode({
             'title': newProduct.title,
@@ -98,7 +100,7 @@ class Products with ChangeNotifier {
 
   Future<void> deleteProduct(String id) async {
     final url =
-        'https://myshop-fef51-default-rtdb.firebaseio.com/products/$id.json';
+        'https://myshop-fef51-default-rtdb.firebaseio.com/products/$id.json?auth=$authToken';
     final existingProductIndex = _items.indexWhere((prodId) => prodId.id == id);
     var existingProduct = _items[existingProductIndex];
     _items.removeAt(existingProductIndex);

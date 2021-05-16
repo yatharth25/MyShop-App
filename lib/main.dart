@@ -25,34 +25,42 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (ctx) => Auth()),
-        ChangeNotifierProvider(create: (ctx) => Products()),
-        ChangeNotifierProvider(create: (ctx) => Cart()),
-        ChangeNotifierProvider(create: (ctx) => Orders()),
-      ],
-      child: MaterialApp(
-        title: 'MyShop',
-        theme: ThemeData(
-          textTheme:
-              GoogleFonts.josefinSansTextTheme(Theme.of(context).textTheme),
-          primarySwatch: Colors.purple,
-          accentColor: Colors.deepOrange,
-          fontFamily: 'Lato',
-          visualDensity: VisualDensity.adaptivePlatformDensity,
-        ),
-        home: LoginScreen(),
-        routes: {
-          ForgotPassword.routeName: (ctx) => ForgotPassword(),
-          CreateNewAccount.routeName: (ctx) => CreateNewAccount(),
-          ProductsOverviewScreen.routeName: (ctx) => ProductsOverviewScreen(),
-          ProductDetailScreen.routeName: (ctx) => ProductDetailScreen(),
-          CartScreen.routeName: (ctx) => CartScreen(),
-          OrdersScreen.routeName: (ctx) => OrdersScreen(),
-          UserProductsScreen.routeName: (ctx) => UserProductsScreen(),
-          EditProductScreen.routeName: (ctx) => EditProductScreen(),
-        },
-      ),
-    );
+        providers: [
+          ChangeNotifierProvider(create: (ctx) => Auth()),
+          ListenableProxyProvider<Auth, Products>(
+            update: (ctx, auth, prevProds) =>
+                Products(auth.token, prevProds == null ? [] : prevProds.items),
+          ),
+          ChangeNotifierProvider(create: (ctx) => Cart()),
+          ListenableProxyProvider<Auth, Orders>(
+            update: (ctx, auth, prevProds) =>
+                Orders(auth.token, prevProds == null ? [] : prevProds.orders),
+          ),
+        ],
+        child: Consumer<Auth>(
+          builder: (ctx, auth, _) => MaterialApp(
+            title: 'MyShop',
+            theme: ThemeData(
+              textTheme:
+                  GoogleFonts.josefinSansTextTheme(Theme.of(context).textTheme),
+              primarySwatch: Colors.purple,
+              accentColor: Colors.deepOrange,
+              fontFamily: 'Lato',
+              visualDensity: VisualDensity.adaptivePlatformDensity,
+            ),
+            home: auth.isAuth ? ProductsOverviewScreen() : LoginScreen(),
+            routes: {
+              ForgotPassword.routeName: (ctx) => ForgotPassword(),
+              CreateNewAccount.routeName: (ctx) => CreateNewAccount(),
+              ProductsOverviewScreen.routeName: (ctx) =>
+                  ProductsOverviewScreen(),
+              ProductDetailScreen.routeName: (ctx) => ProductDetailScreen(),
+              CartScreen.routeName: (ctx) => CartScreen(),
+              OrdersScreen.routeName: (ctx) => OrdersScreen(),
+              UserProductsScreen.routeName: (ctx) => UserProductsScreen(),
+              EditProductScreen.routeName: (ctx) => EditProductScreen(),
+            },
+          ),
+        ));
   }
 }

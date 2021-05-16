@@ -73,7 +73,7 @@ flutter:
       fonts:
         - asset: assets/fonts/Anton-Regular.ttf
   assets:
-    - assets/images/login_bg.png
+    - assets/images/login_bg.jpg
     - assets/images/register_bg.png
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

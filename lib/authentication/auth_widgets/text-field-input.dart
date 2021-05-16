@@ -8,12 +8,16 @@ class TextInputField extends StatelessWidget {
     @required this.hint,
     this.inputType,
     this.inputAction,
+    this.save,
+    this.validate,
   }) : super(key: key);
 
   final IconData icon;
   final String hint;
   final TextInputType inputType;
   final TextInputAction inputAction;
+  final save;
+  final validate;
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +32,7 @@ class TextInputField extends StatelessWidget {
           borderRadius: BorderRadius.circular(16),
         ),
         child: Center(
-          child: TextField(
+          child: TextFormField(
             decoration: InputDecoration(
               border: InputBorder.none,
               prefixIcon: Padding(
@@ -45,6 +49,8 @@ class TextInputField extends StatelessWidget {
             style: kBodyText,
             keyboardType: inputType,
             textInputAction: inputAction,
+            onSaved: save,
+            validator: validate,
           ),
         ),
       ),

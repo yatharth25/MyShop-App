@@ -14,7 +14,7 @@ class ForgotPassword extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
     return Stack(
       children: [
-        BackgroundImage(image: 'assets/images/login_bg.png'),
+        BackgroundImage(image: 'assets/images/login_bg.jpg'),
         Scaffold(
           backgroundColor: Colors.transparent,
           appBar: AppBar(
@@ -22,7 +22,7 @@ class ForgotPassword extends StatelessWidget {
             elevation: 0,
             leading: IconButton(
               onPressed: () {
-                Navigator.pop(context);
+                Navigator.of(context).pop();
               },
               icon: Icon(
                 Icons.arrow_back_ios,
