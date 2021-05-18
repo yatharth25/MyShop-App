@@ -7,7 +7,7 @@ import '../models/http_exceptions.dart';
 class Auth with ChangeNotifier {
   String _token;
   DateTime _expiryDate;
-  //String _userId;
+  String _userId;
 
   bool get isAuth {
     return _token != null;
@@ -20,6 +20,10 @@ class Auth with ChangeNotifier {
       return _token;
     }
     return null;
+  }
+
+  String get userId {
+    return _userId;
   }
 
   Future<void> _authenticate(
@@ -42,7 +46,7 @@ class Auth with ChangeNotifier {
         throw HttpException(responseData['error']['message']);
       }
       _token = responseData['idToken'];
-      //_userId = responseData['localId'];
+      _userId = responseData['localId'];
       _expiryDate = DateTime.now().add(
         Duration(
           seconds: int.parse(responseData['expiresIn']),
@@ -60,5 +64,23 @@ class Auth with ChangeNotifier {
 
   Future<void> login(String email, String password) async {
     return _authenticate(email, password, 'signInWithPassword');
+  }
+
+  Future<void> addUserName(String name, String userId, String token) async {
+    final url =
+        'https://myshop-fef51-default-rtdb.firebaseio.com/username/$userId.json?auth=$token';
+    await http.put(
+      Uri.parse(url),
+      body: json.encode({
+        'name': name,
+      }),
+    );
+  }
+
+  void logout() {
+    _token = null;
+    _userId = null;
+    _expiryDate = null;
+    notifyListeners();
   }
 }

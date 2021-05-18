@@ -43,6 +43,7 @@ class _AuthSignupState extends State<AuthSignup> {
 
   AuthMode _authMode = AuthMode.Signup;
 
+  String _username;
   Map<String, String> _authData = {
     'email': '',
     'password': '',
@@ -68,6 +69,7 @@ class _AuthSignupState extends State<AuthSignup> {
   }
 
   Future<void> _submit() async {
+    final authData = Provider.of<Auth>(context, listen: false);
     if (!_formKey.currentState.validate()) {
       // Invalid!
       return;
@@ -84,6 +86,7 @@ class _AuthSignupState extends State<AuthSignup> {
         await Provider.of<Auth>(context, listen: false)
             .signup(_authData['email'], _authData['password']);
       }
+      await authData.addUserName(_username, authData.userId, authData.token);
     } on HttpException catch (error) {
       var errorMessage = 'Aunthentication failed';
       if (error.toString().contains('EMAIL_EXISTS')) {
@@ -180,6 +183,9 @@ class _AuthSignupState extends State<AuthSignup> {
                   hint: 'Name',
                   inputType: TextInputType.name,
                   inputAction: TextInputAction.next,
+                  save: (value) {
+                    _username = value;
+                  },
                 ),
                 TextInputField(
                   icon: FontAwesomeIcons.envelope,

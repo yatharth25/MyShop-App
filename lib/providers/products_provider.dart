@@ -8,7 +8,13 @@ import '../models/http_exceptions.dart';
 class Products with ChangeNotifier {
   List<Product> _items = [];
   final String authToken;
-  Products(this.authToken, this._items);
+  final String userId;
+  String _username;
+  Products(this.authToken, this.userId, this._items);
+
+  String get username {
+    return _username;
+  }
 
   List<Product> get items {
     return [..._items];
@@ -31,6 +37,10 @@ class Products with ChangeNotifier {
       if (extractedData == null) {
         return;
       }
+      final uri =
+          'https://myshop-fef51-default-rtdb.firebaseio.com/userFavorites/$userId.json?auth=$authToken';
+      final favResponse = await http.get(Uri.parse(uri));
+      final favData = json.decode(favResponse.body);
       final List<Product> loadedProducts = [];
       extractedData.forEach((prodId, prodData) {
         loadedProducts.add(Product(
@@ -39,7 +49,7 @@ class Products with ChangeNotifier {
           description: prodData['description'],
           price: prodData['price'],
           imageUrl: prodData['imageUrl'],
-          isFavorite: prodData['isFavorite'],
+          isFavorite: favData == null ? false : favData[prodId] ?? false,
         ));
       });
       _items = loadedProducts;
@@ -47,6 +57,14 @@ class Products with ChangeNotifier {
     } catch (error) {
       throw (error);
     }
+  }
+
+  Future<void> fetchUserName() async {
+    final url =
+        'https://myshop-fef51-default-rtdb.firebaseio.com/username/$userId.json?auth=$authToken';
+    final response = await http.get(Uri.parse(url));
+    final nameData = json.decode(response.body);
+    _username = nameData['name'];
   }
 
   Future<void> addProduct(Product product) async {
@@ -60,7 +78,6 @@ class Products with ChangeNotifier {
           'price': product.price,
           'description': product.description,
           'imageUrl': product.imageUrl,
-          'isFavorite': product.isFavorite,
         }),
       );
       final newProduct = Product(
