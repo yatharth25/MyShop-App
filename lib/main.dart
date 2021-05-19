@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import './screens/products_overview_screen.dart';
 import './screens/product_detail_screen.dart';
+import './screens/splashScreen.dart';
 import './providers/products_provider.dart';
 import './providers/cart.dart';
 import './providers/auth.dart';
@@ -48,7 +49,15 @@ class MyApp extends StatelessWidget {
               fontFamily: 'Lato',
               visualDensity: VisualDensity.adaptivePlatformDensity,
             ),
-            home: auth.isAuth ? ProductsOverviewScreen() : LoginScreen(),
+            home: auth.isAuth
+                ? ProductsOverviewScreen()
+                : FutureBuilder(
+                    future: auth.tryAutoLogin(),
+                    builder: (ctx, authResultSnapshot) =>
+                        authResultSnapshot.connectionState ==
+                                ConnectionState.waiting
+                            ? SplashScreen()
+                            : LoginScreen()),
             routes: {
               ForgotPassword.routeName: (ctx) => ForgotPassword(),
               CreateNewAccount.routeName: (ctx) => CreateNewAccount(),

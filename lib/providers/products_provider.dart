@@ -65,6 +65,7 @@ class Products with ChangeNotifier {
     final response = await http.get(Uri.parse(url));
     final nameData = json.decode(response.body);
     _username = nameData['name'];
+    notifyListeners();
   }
 
   Future<void> addProduct(Product product) async {
