@@ -84,12 +84,8 @@ class _AuthLoginState extends State<AuthLogin> {
       }
     } on HttpException catch (error) {
       var errorMessage = 'Aunthentication failed';
-      if (error.toString().contains('EMAIL_EXISTS')) {
-        errorMessage = 'This email already exists';
-      } else if (error.toString().contains('INVALID_EMAIL')) {
+      if (error.toString().contains('INVALID_EMAIL')) {
         errorMessage = 'This is not a valid email address';
-      } else if (error.toString().contains('WEAK_PASSWORD')) {
-        errorMessage = 'The password is too weak';
       } else if (error.toString().contains('EMAIL_NOT_FOUND')) {
         errorMessage = 'Could not find the email';
       } else if (error.toString().contains('INVALID_PASSWORD')) {

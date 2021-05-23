@@ -6,3 +6,7 @@ const TextStyle kBodyText =
 
 const Color kWhite = Colors.white;
 const Color kBlue = Color(0xff5663ff);
+const Color kTextColor = Color(0xFF535353);
+const Color kTextLightColor = Color(0xFFACACAC);
+
+const kDefaultPaddin = 20.0;

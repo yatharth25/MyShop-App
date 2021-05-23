@@ -56,10 +56,7 @@ class _AppDrawerState extends State<AppDrawer> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
             child: CircleAvatar(
-              backgroundImage: NetworkImage(
-                'https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png',
-              ),
-            ),
+                backgroundImage: AssetImage('assets/icons/profile_icon.png')),
           ),
         ],
       ),
