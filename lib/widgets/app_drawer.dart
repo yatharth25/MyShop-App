@@ -50,13 +50,19 @@ class _AppDrawerState extends State<AppDrawer> {
   Column drawer(String username, BuildContext context) {
     return Column(children: <Widget>[
       AppBar(
-        title: Text('Hi, $username!'),
+        title: Text(
+          'Hi, $username!',
+          style: TextStyle(color: Colors.black),
+        ),
+        backgroundColor: Colors.white,
+        elevation: 0,
         automaticallyImplyLeading: false,
         actions: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
             child: CircleAvatar(
-                backgroundImage: AssetImage('assets/icons/profile_icon.png')),
+              backgroundImage: AssetImage('assets/icons/profile_icon.png'),
+            ),
           ),
         ],
       ),

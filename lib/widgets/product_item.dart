@@ -71,7 +71,7 @@ class ProductItem extends StatelessWidget {
                       child: Text(
                         // products is out demo list
                         product.title,
-                        style: TextStyle(color: kTextLightColor),
+                        style: TextStyle(color: Colors.black),
                       ),
                     ),
                     Text(

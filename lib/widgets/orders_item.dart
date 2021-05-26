@@ -19,11 +19,12 @@ class _OrderItemState extends State<OrderItem> {
   @override
   Widget build(BuildContext context) {
     return Card(
+      color: Colors.yellowAccent,
       margin: EdgeInsets.all(10),
       child: Column(
         children: [
           ListTile(
-            title: Text('\$${widget.order.amount.toStringAsFixed(2)}'),
+            title: Text('\u20B9${widget.order.amount.toStringAsFixed(2)}'),
             subtitle: Text(
                 DateFormat('dd-MM-yyyy hh:mm').format(widget.order.dateTime)),
             trailing: IconButton(
@@ -40,6 +41,7 @@ class _OrderItemState extends State<OrderItem> {
               padding: EdgeInsets.symmetric(horizontal: 15, vertical: 4),
               height: min(widget.order.products.length * 20.0 + 10, 180),
               child: ListView(
+                padding: EdgeInsets.only(top: 8, bottom: 8),
                 children: widget.order.products
                     .map(
                       (prod) => Row(
@@ -53,7 +55,7 @@ class _OrderItemState extends State<OrderItem> {
                             ),
                           ),
                           Text(
-                            '${prod.quantity}x \$${prod.price}',
+                            '${prod.quantity}x \u20B9${prod.price}',
                             style: TextStyle(
                               fontSize: 18,
                               color: Colors.grey,
